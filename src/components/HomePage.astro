@@ -62,10 +62,11 @@ const testimonials = t.testimonials.items.map((item) => ({
     .join("")
 }));
 
-const canonical = `https://keshavdhamseva.org${localePath[locale]}`;
+const siteUrl = "https://keshavdhamseva.netlify.app";
+const canonical = `${siteUrl}${localePath[locale]}`;
 const alternates = locales.map((item) => ({
   hreflang: item,
-  href: `https://keshavdhamseva.org${localePath[item]}`
+  href: `${siteUrl}${localePath[item]}`
 }));
 ---
 
