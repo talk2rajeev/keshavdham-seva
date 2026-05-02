@@ -1,0 +1,76 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: string;
+  canonical?: string;
+  image?: string;
+  alternates?: Array<{ href: string; hreflang: string }>;
+}
+
+const {
+  title,
+  description,
+  lang = "en",
+  canonical = "https://keshavdhamseva.org/",
+  image = "https://keshavdhamseva.org/images/homeless-outreach-street.png",
+  alternates = []
+} = Astro.props;
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "NGO",
+  name: "Keshavdham Seva and Adhyatam Trust",
+  alternateName: "Keshavdham Seva",
+  url: canonical,
+  logo: "https://keshavdhamseva.org/images/logo.png",
+  description,
+  email: "info@keshavdhamseva.org",
+  telephone: "+91 98765 43210",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Vrindavan",
+    addressRegion: "Uttar Pradesh",
+    addressCountry: "IN"
+  },
+  sameAs: [canonical]
+};
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="apple-touch-icon" href="/images/logo.png" />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((alternate) => <link rel="alternate" hreflang={alternate.hreflang} href={alternate.href} />)}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:locale" content={lang === "hi" ? "hi_IN" : "en_IN"} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="theme-color" content="#fff8f1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+  </head>
+  <body class="bg-cream font-sans text-ink antialiased selection:bg-accent/40">
+    <slot />
+  </body>
+</html>

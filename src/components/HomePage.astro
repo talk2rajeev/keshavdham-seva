@@ -1,0 +1,419 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  getTranslations,
+  localeLabels,
+  localePath,
+  locales,
+  type Locale
+} from "../i18n/translations";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+
+const navItems = [
+  { label: t.nav.home, href: "#top" },
+  { label: t.nav.services, href: "#services" },
+  { label: t.nav.about, href: "#about" },
+  { label: t.nav.contact, href: "#contact" }
+];
+
+const stats = [
+  { value: "10,000+", label: t.stats.livesTouched },
+  { value: "500+", label: t.stats.cowsSheltered },
+  { value: "25+", label: t.stats.sevaProjects },
+  { value: "100%", label: t.stats.transparency }
+];
+
+const cards = [
+  {
+    icon: "🧘",
+    title: t.cards.yogaTitle,
+    body: t.cards.yogaBody,
+    image: "/images/yoga.png",
+    alt: "Yoga and wellness session at Keshavdham Seva"
+  },
+  {
+    icon: "🐄",
+    title: t.cards.gaushalaTitle,
+    body: t.cards.gaushalaBody,
+    image: "/images/gaushala.png",
+    alt: "Gaushala and cow care initiative"
+  },
+  {
+    icon: "🎓",
+    title: t.cards.educationTitle,
+    body: t.cards.educationBody,
+    image: "/images/gurukul.png",
+    alt: "Children learning in the education program"
+  }
+];
+
+const testimonials = t.testimonials.items.map((item) => ({
+  ...item,
+  initials: item.name
+    .split(" ")
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+}));
+
+const canonical = `https://keshavdhamseva.org${localePath[locale]}`;
+const alternates = locales.map((item) => ({
+  hreflang: item,
+  href: `https://keshavdhamseva.org${localePath[item]}`
+}));
+---
+
+<BaseLayout
+  title={t.siteTitle}
+  description={t.siteDescription}
+  lang={locale}
+  canonical={canonical}
+  alternates={alternates}
+>
+  <a id="top"></a>
+  <header class="sticky top-0 z-50 border-b border-stone-400/20 bg-[#fdfcf9]/95 backdrop-blur-xl">
+    <div class="mx-auto flex min-h-[5.5rem] w-[min(1200px,calc(100vw-2rem))] items-center justify-between gap-4">
+      <a
+        class="inline-flex items-center gap-4 font-serif text-[clamp(1.1rem,1rem+0.8vw,2rem)] font-bold text-brand"
+        href={localePath[locale]}
+        aria-label={`${t.brand} home`}
+      >
+        <img
+          class="h-14 w-14 rounded-full object-cover shadow-[0_8px_20px_rgba(0,0,0,0.08)] sm:h-[4.25rem] sm:w-[4.25rem]"
+          src="/images/logo.png"
+          alt={`${t.brand} logo`}
+          loading="eager"
+        />
+        <span>{t.brand}</span>
+      </a>
+
+      <nav class="hidden items-center gap-8 text-muted md:flex lg:gap-11" aria-label="Primary">
+        {navItems.map((item) => (
+          <a
+            class="border-b-2 border-transparent pb-1 font-medium transition-colors duration-200 hover:border-accent hover:text-ink focus-visible:border-accent focus-visible:text-ink"
+            href={item.href}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="hidden items-center rounded-2xl border border-stone-300/70 bg-white/80 p-1 sm:inline-flex">
+          {locales.map((item) => (
+            <a
+              href={localePath[item]}
+              hreflang={item}
+              aria-label={`${t.common.language}: ${localeLabels[item]}`}
+              class:list={[
+                "rounded-xl px-3 py-2 text-sm font-semibold transition",
+                item === locale ? "bg-primary text-white shadow-sm" : "text-muted hover:text-primary"
+              ]}
+            >
+              {item === "en" ? "EN" : "हि"}
+            </a>
+          ))}
+        </div>
+        <a
+          class="hidden min-h-14 items-center justify-center rounded-2xl bg-accent px-6 py-3 font-bold text-primary shadow-[0_14px_30px_rgba(254,189,17,0.28)] transition duration-200 hover:-translate-y-px md:inline-flex"
+          href="#donate"
+        >
+          {t.common.donate}
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="relative grid min-h-[min(90vh,56rem)] place-items-center overflow-hidden" aria-labelledby="hero-title">
+      <div class="absolute inset-0">
+        <img
+          class="h-full w-full object-cover"
+          src="/images/homeless-outreach-street.png"
+          alt="Keshavdham Seva volunteer helping an elderly man during outreach"
+          loading="eager"
+        />
+      </div>
+      <div class="absolute inset-0 bg-[linear-gradient(to_top,rgba(255,248,241,1),rgba(255,248,241,0.32)_42%,rgba(255,248,241,0.08)),linear-gradient(to_right,rgba(36,26,0,0.2),transparent_30%,transparent_70%,rgba(36,26,0,0.22))]"></div>
+      <div class="relative z-[1] mx-auto flex w-[min(1200px,calc(100vw-2rem))] flex-col items-center px-0 py-24 text-center sm:py-32 md:py-40">
+        <img
+          class="mb-5 h-[clamp(6.5rem,9vw,10rem)] w-[clamp(6.5rem,9vw,10rem)] rounded-full bg-white/90 p-2.5 shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
+          src="/images/logo.png"
+          alt={`${t.brand} emblem`}
+          loading="eager"
+        />
+        <p class="m-0 text-[0.88rem] font-bold uppercase tracking-[0.34em] text-primary">{t.hero.eyebrow}</p>
+        <h1
+          id="hero-title"
+          class="mt-4 max-w-[14ch] font-serif text-[clamp(3rem,6vw,5.3rem)] font-semibold leading-[1.08]"
+        >
+          {t.trustName}
+        </h1>
+        <p class="mx-auto mt-6 max-w-[44rem] text-[clamp(1.05rem,2vw,1.35rem)] leading-[1.8] text-ink/80">
+          {t.hero.description}
+        </p>
+        <div class="mt-10 flex w-full flex-wrap justify-center gap-4">
+          <a
+            class="inline-flex min-h-14 w-full items-center justify-center rounded-2xl bg-accent px-7 py-4 font-bold text-primary shadow-[0_14px_30px_rgba(254,189,17,0.28)] transition duration-200 hover:-translate-y-px sm:w-auto"
+            href="#services"
+          >
+            {t.common.joinMission}
+          </a>
+          <a
+            class="inline-flex min-h-14 w-full items-center justify-center rounded-2xl border-2 border-secondary/80 bg-white/85 px-7 py-4 font-bold text-secondary transition duration-200 hover:-translate-y-px sm:w-auto"
+            href="#about"
+          >
+            {t.common.learnMore}
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="relative z-[2] mx-auto -mt-20 w-[min(1200px,calc(100vw-2rem))]"
+      aria-label="Impact highlights"
+    >
+      <div class="grid overflow-hidden rounded-[2rem] border border-[#d4c5ac]/60 bg-white/95 shadow-soft md:grid-cols-4">
+        {stats.map((stat, index) => (
+          <article
+            class:list={[
+              "px-4 py-10 text-center border-[#d4c5ac]/55",
+              index !== stats.length - 1 ? "border-b md:border-b-0 md:border-r" : ""
+            ]}
+          >
+            <div class="font-serif text-[clamp(2.5rem,4vw,4.2rem)] leading-none text-primary">
+              {stat.value}
+            </div>
+            <div class="mt-3 text-[0.88rem] font-bold uppercase tracking-[0.18em] text-muted">
+              {stat.label}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section id="services" class="mx-auto w-[min(1200px,calc(100vw-2rem))] py-14 md:py-20">
+      <div class="mb-12 text-center">
+        <p class="m-0 text-[0.88rem] font-bold uppercase tracking-[0.34em] text-primary">{t.sections.sacredInitiatives}</p>
+        <h2 class="mt-4 font-serif text-[clamp(2.4rem,5vw,4rem)] font-semibold leading-[1.08]">
+          {t.sections.compassionInAction}
+        </h2>
+      </div>
+
+      <article class="relative min-h-[22rem] overflow-hidden rounded-[2rem] shadow-soft md:min-h-[32rem]">
+        <img
+          class="h-full w-full object-cover"
+          src="/images/homeless-outreach-hall.png"
+          alt="Community support for homeless people"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 flex flex-col justify-end bg-[linear-gradient(to_top,rgba(0,0,0,0.76),rgba(0,0,0,0.18)_55%,transparent)] p-6 text-white md:p-12">
+          <h3 class="font-serif text-[clamp(2rem,3vw,3rem)] font-semibold leading-[1.08]">
+            {t.sections.supportHomeless}
+          </h3>
+          <p class="mt-4 max-w-[44rem] text-[clamp(1rem,2vw,1.32rem)] leading-[1.75] text-white/85">
+            {t.sections.supportHomelessDescription}
+          </p>
+          <div class="mt-6 flex justify-end">
+            <a
+              class="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/30 bg-white/15 px-5 py-2.5 text-sm font-bold text-white backdrop-blur-sm transition duration-200 hover:-translate-y-px hover:bg-white hover:text-primary"
+              href="#about"
+            >
+              {t.common.more}
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <div class="mt-8 grid gap-7 md:grid-cols-2 xl:grid-cols-3">
+        {cards.map((card) => (
+          <article class="flex flex-col rounded-[2rem] border border-[#d4c5ac]/45 bg-[linear-gradient(180deg,#fff3d3_0%,#fff5de_100%)] p-7 shadow-[0_14px_34px_rgba(84,56,10,0.09)]">
+            <div
+              class="mb-6 grid h-[4.2rem] w-[4.2rem] place-items-center rounded-[1.2rem] bg-white/55 text-[1.8rem]"
+              aria-hidden="true"
+            >
+              {card.icon}
+            </div>
+            <h3 class="font-serif text-[clamp(1.8rem,2.2vw,2.35rem)] font-semibold leading-[1.08]">
+              {card.title}
+            </h3>
+            <p class="min-h-[8.5rem] text-[1.04rem] leading-[1.9] text-muted xl:min-h-[8.5rem]">
+              {card.body}
+            </p>
+            <img class="mt-auto h-72 w-full rounded-[1.25rem] object-cover" src={card.image} alt={card.alt} loading="lazy" />
+            <a
+              class="mt-6 ml-auto inline-flex min-h-11 w-fit items-center justify-center rounded-xl border border-primary/20 bg-white/70 px-5 py-2.5 text-sm font-bold text-primary transition duration-200 hover:-translate-y-px hover:bg-white"
+              href="#about"
+            >
+              {t.common.more}
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section id="about" class="mx-auto w-[min(1200px,calc(100vw-2rem))] pb-18 pt-8 md:pb-24 md:pt-10">
+      <div class="mb-10 md:mb-12">
+        <div class="mb-8 text-center md:mb-10">
+          <p class="m-0 text-[0.88rem] font-bold uppercase tracking-[0.34em] text-primary">
+            {t.sections.testimonialEyebrow}
+          </p>
+          <h2 class="mt-4 font-serif text-[clamp(2.2rem,4.4vw,3.8rem)] font-semibold leading-[1.08]">
+            {t.sections.testimonialsTitle}
+          </h2>
+        </div>
+
+        <div class="relative" data-testimonial-slider>
+          <button
+            type="button"
+            data-testimonial-prev
+            aria-label={t.testimonials.previous}
+            class="absolute left-0 top-1/2 z-10 hidden h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-stone-300 bg-white/95 text-primary shadow-lg transition hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-40 lg:inline-flex"
+          >
+            &#8592;
+          </button>
+
+          <div
+            class="flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-visible bg-transparent scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            data-testimonial-track
+          >
+            {testimonials.map((item) => (
+              <article class="min-w-full snap-start rounded-[2rem] border border-[#d4c5ac]/50 bg-[#fffaf2] p-6 shadow-soft md:min-w-[calc(50%-0.75rem)] md:p-8">
+                <div class="flex items-start gap-5">
+                  <div class="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-[linear-gradient(180deg,#ffd777_0%,#f5a54e_100%)] font-serif text-xl font-semibold text-white shadow-md">
+                    {item.initials}
+                  </div>
+                  <div class="min-w-0">
+                    <div class="font-serif text-[1.45rem] font-semibold text-ink">
+                      {item.name}, {item.age}
+                    </div>
+                    <div class="mt-1 text-sm font-semibold uppercase tracking-[0.18em] text-primary/80">
+                      {item.occupation}
+                    </div>
+                  </div>
+                </div>
+                <blockquote class="mt-6 font-serif text-[1.2rem] leading-[1.8] text-muted">
+                  “{item.comment}”
+                </blockquote>
+              </article>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            data-testimonial-next
+            aria-label={t.testimonials.next}
+            class="absolute right-0 top-1/2 z-10 hidden h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-stone-300 bg-white/95 text-primary shadow-lg transition hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-40 lg:inline-flex"
+          >
+            &#8594;
+          </button>
+        </div>
+      </div>
+
+      <div class="rounded-[2rem] bg-[linear-gradient(180deg,#ffefbe_0%,#ffe8a3_100%)] px-8 py-12 text-center shadow-soft md:rounded-[3rem] md:px-16 md:py-20">
+        <h2 class="font-serif text-[clamp(2.6rem,5vw,4.8rem)] font-semibold leading-[1.08]">
+          {t.donate.title}
+        </h2>
+        <p class="mx-auto mt-6 max-w-[52rem] text-[clamp(1.05rem,2vw,1.35rem)] leading-[1.8] text-muted">
+          {t.donate.body}
+        </p>
+        <a
+          id="donate"
+          class="mt-8 inline-flex min-h-14 items-center justify-center rounded-full bg-accentDeep px-10 py-4 font-bold text-white shadow-[0_14px_30px_rgba(122,89,0,0.24)] transition duration-200 hover:-translate-y-px"
+          href="mailto:info@keshavdhamseva.org?subject=I%20want%20to%20donate"
+        >
+          {t.common.donateNow}
+        </a>
+        <span class="mt-5 block text-muted/90">{t.donate.note}</span>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact" class="border-t border-stone-400/20 bg-white/80 pt-16">
+    <div class="mx-auto grid w-[min(1200px,calc(100vw-2rem))] gap-10 md:grid-cols-[1.4fr_0.8fr_0.9fr]">
+      <div>
+        <a
+          class="mb-4 inline-flex items-center gap-4 font-serif text-[clamp(1.1rem,1rem+0.8vw,2rem)] font-bold text-brand"
+          href={localePath[locale]}
+        >
+          <img
+            class="h-14 w-14 rounded-full object-cover shadow-[0_8px_20px_rgba(0,0,0,0.08)] sm:h-[4.25rem] sm:w-[4.25rem]"
+            src="/images/logo.png"
+            alt={`${t.brand} logo`}
+            loading="lazy"
+          />
+          <span>{t.brand}</span>
+        </a>
+        <p class="max-w-[30rem] leading-[1.9] text-muted">
+          {t.footer.about}
+        </p>
+      </div>
+
+      <div>
+        <h3 class="mb-4 font-serif text-[1.3rem] font-semibold">{t.footer.quickLinks}</h3>
+        <ul class="grid gap-4 text-muted">
+          <li><a class="transition hover:text-primary focus-visible:text-primary" href="#about">{t.footer.aboutUs}</a></li>
+          <li><a class="transition hover:text-primary focus-visible:text-primary" href="#services">{t.footer.ourProjects}</a></li>
+          <li><a class="transition hover:text-primary focus-visible:text-primary" href="mailto:info@keshavdhamseva.org?subject=Annual%20Reports">{t.footer.annualReports}</a></li>
+          <li><a class="transition hover:text-primary focus-visible:text-primary" href="mailto:info@keshavdhamseva.org?subject=Volunteer%20with%20Keshavdham%20Seva">{t.footer.volunteer}</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="mb-4 font-serif text-[1.3rem] font-semibold">{t.footer.contactUs}</h3>
+        <ul class="grid gap-4 text-muted">
+          <li><a class="transition hover:text-primary focus-visible:text-primary" href="mailto:info@keshavdhamseva.org">info@keshavdhamseva.org</a></li>
+          <li><a class="transition hover:text-primary focus-visible:text-primary" href="tel:+919876543210">+91 98765 43210</a></li>
+          <li><span>Vrindavan, Uttar Pradesh, India</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mx-auto mt-10 w-[min(1200px,calc(100vw-2rem))] border-t border-stone-400/15 py-10 text-center text-sm text-muted/90">
+      <p>{t.footer.copyright}</p>
+    </div>
+  </footer>
+</BaseLayout>
+
+<script>
+  const sliderRoot = document.querySelector("[data-testimonial-slider]");
+
+  if (sliderRoot) {
+    const track = sliderRoot.querySelector("[data-testimonial-track]");
+    const prevButton = sliderRoot.querySelector("[data-testimonial-prev]");
+    const nextButton = sliderRoot.querySelector("[data-testimonial-next]");
+
+    if (track && prevButton && nextButton) {
+      const getStep = () => {
+        const firstCard = track.firstElementChild;
+        if (!firstCard) return track.clientWidth;
+        const style = window.getComputedStyle(track);
+        const gap = Number.parseFloat(style.columnGap || style.gap || "0");
+        return firstCard.getBoundingClientRect().width + gap;
+      };
+
+      const updateButtons = () => {
+        const maxScroll = track.scrollWidth - track.clientWidth - 4;
+        prevButton.disabled = track.scrollLeft <= 4;
+        nextButton.disabled = track.scrollLeft >= maxScroll;
+      };
+
+      prevButton.addEventListener("click", () => {
+        track.scrollBy({ left: -getStep(), behavior: "smooth" });
+      });
+
+      nextButton.addEventListener("click", () => {
+        track.scrollBy({ left: getStep(), behavior: "smooth" });
+      });
+
+      track.addEventListener("scroll", updateButtons, { passive: true });
+      window.addEventListener("resize", updateButtons);
+      updateButtons();
+    }
+  }
+</script>
