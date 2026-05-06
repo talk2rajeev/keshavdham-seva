@@ -1,0 +1,61 @@
+---
+import SiteFooter from "../../../components/SiteFooter.astro";
+import SiteHeader from "../../../components/SiteHeader.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getPagePath, getTranslations, locales } from "../../../i18n/translations";
+
+const locale = "hi";
+const t = getTranslations(locale);
+const siteUrl = "https://keshavdhamseva.netlify.app";
+const canonical = `${siteUrl}${getPagePath(locale, "about")}`;
+const alternates = locales.map((item) => ({
+  hreflang: item,
+  href: `${siteUrl}${getPagePath(item, "about")}`
+}));
+
+const pillars = [
+  { title: t.aboutPage.pillars.yogaTitle, body: t.aboutPage.pillars.yogaBody },
+  { title: t.aboutPage.pillars.meditationTitle, body: t.aboutPage.pillars.meditationBody },
+  { title: t.aboutPage.pillars.anxietyTitle, body: t.aboutPage.pillars.anxietyBody },
+  { title: t.aboutPage.pillars.sevaTitle, body: t.aboutPage.pillars.sevaBody }
+];
+---
+
+<BaseLayout title={`${t.aboutPage.title} | ${t.brand}`} description={t.siteDescription} lang={locale} canonical={canonical} alternates={alternates}>
+  <SiteHeader locale={locale} currentPage="about" />
+  <main class="mx-auto w-[min(1200px,calc(100vw-2rem))] py-14 md:py-20">
+    <section id="mission" class="rounded-[2.4rem] bg-[linear-gradient(180deg,#fff7e8_0%,#fff4e2_100%)] p-8 md:p-12">
+      <div class="mb-8 inline-flex items-center gap-4 font-serif text-[clamp(1.3rem,1.1rem+1vw,2.4rem)] font-bold text-brand">
+        <img class="h-16 w-16 rounded-full object-cover md:h-20 md:w-20" src="/images/logo.png" alt={`${t.brand} logo`} />
+        <span>{t.brand}</span>
+      </div>
+      <h1 class="max-w-4xl font-serif text-[clamp(2.6rem,5vw,4.8rem)] font-semibold leading-[1.08]">
+        {t.aboutPage.title}
+      </h1>
+      <p class="mt-8 max-w-5xl text-[1.08rem] leading-[1.95] text-muted md:text-[1.15rem]">
+        {t.aboutPage.intro}
+      </p>
+      <p class="mt-6 max-w-5xl text-[1.05rem] leading-[1.95] text-muted md:text-[1.12rem]">
+        {t.aboutPage.subheading}
+      </p>
+
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        {pillars.map((pillar) => (
+          <article class="rounded-[1.8rem] bg-white/70 p-6">
+            <h2 class="font-serif text-[clamp(1.7rem,2vw,2.3rem)] font-semibold leading-[1.1] text-primary">
+              {pillar.title}
+            </h2>
+            <p class="mt-4 text-[1.02rem] leading-[1.9] text-muted">
+              {pillar.body}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      <p class="mt-10 max-w-5xl text-[1.08rem] leading-[1.95] text-muted md:text-[1.15rem]">
+        {t.aboutPage.closing}
+      </p>
+    </section>
+  </main>
+  <SiteFooter locale={locale} />
+</BaseLayout>

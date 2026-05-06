@@ -1,8 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteFooter from "./SiteFooter.astro";
+import SiteHeader from "./SiteHeader.astro";
 import {
+  getPagePath,
   getTranslations,
-  localeLabels,
   localePath,
   locales,
   type Locale
@@ -14,13 +16,6 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = getTranslations(locale);
-
-const navItems = [
-  { label: t.nav.home, href: "#top" },
-  { label: t.nav.services, href: "#services" },
-  { label: t.nav.about, href: "#about" },
-  { label: t.nav.contact, href: "#contact" }
-];
 
 const stats = [
   { value: "10,000+", label: t.stats.livesTouched },
@@ -53,6 +48,21 @@ const cards = [
   }
 ];
 
+const stillnessSlides = [
+  {
+    image: "/images/meditation-stillness.png",
+    alt: "Meditation session in a calm studio"
+  },
+  {
+    image: "/images/yoga-stillness.png",
+    alt: "Yoga session in a light-filled wellness hall"
+  },
+  {
+    image: "/images/stillness-consultation.png",
+    alt: "Wellness guidance and counseling session"
+  }
+];
+
 const testimonials = t.testimonials.items.map((item) => ({
   ...item,
   initials: item.name
@@ -78,58 +88,7 @@ const alternates = locales.map((item) => ({
   alternates={alternates}
 >
   <a id="top"></a>
-  <header class="sticky top-0 z-50 border-b border-stone-400/20 bg-[#fdfcf9]/95 backdrop-blur-xl">
-    <div class="mx-auto flex min-h-[5.5rem] w-[min(1200px,calc(100vw-2rem))] items-center justify-between gap-4">
-      <a
-        class="inline-flex items-center gap-4 font-serif text-[clamp(1.1rem,1rem+0.8vw,2rem)] font-bold text-brand"
-        href={localePath[locale]}
-        aria-label={`${t.brand} home`}
-      >
-        <img
-          class="h-14 w-14 rounded-full object-cover shadow-[0_8px_20px_rgba(0,0,0,0.08)] sm:h-[4.25rem] sm:w-[4.25rem]"
-          src="/images/logo.png"
-          alt={`${t.brand} logo`}
-          loading="eager"
-        />
-        <span>{t.brand}</span>
-      </a>
-
-      <nav class="hidden items-center gap-8 text-muted md:flex lg:gap-11" aria-label="Primary">
-        {navItems.map((item) => (
-          <a
-            class="border-b-2 border-transparent pb-1 font-medium transition-colors duration-200 hover:border-accent hover:text-ink focus-visible:border-accent focus-visible:text-ink"
-            href={item.href}
-          >
-            {item.label}
-          </a>
-        ))}
-      </nav>
-
-      <div class="flex items-center gap-2 sm:gap-3">
-        <div class="inline-flex items-center rounded-2xl border border-stone-300/70 bg-white/80 p-1">
-          {locales.map((item) => (
-            <a
-              href={localePath[item]}
-              hreflang={item}
-              aria-label={`${t.common.language}: ${localeLabels[item]}`}
-              class:list={[
-                "rounded-xl px-2.5 py-2 text-xs font-semibold transition sm:px-3 sm:text-sm",
-                item === locale ? "bg-primary text-white shadow-sm" : "text-muted hover:text-primary"
-              ]}
-            >
-              {item === "en" ? "EN" : "हि"}
-            </a>
-          ))}
-        </div>
-        <a
-          class="inline-flex min-h-11 items-center justify-center rounded-2xl bg-accent px-4 py-2.5 text-sm font-bold text-primary shadow-[0_14px_30px_rgba(254,189,17,0.28)] transition duration-200 hover:-translate-y-px sm:min-h-14 sm:px-6 sm:py-3 sm:text-base"
-          href="#donate"
-        >
-          {t.common.donate}
-        </a>
-      </div>
-    </div>
-  </header>
+  <SiteHeader locale={locale} currentPage="home" />
 
   <main>
     <section class="relative grid min-h-[min(90vh,56rem)] place-items-center overflow-hidden" aria-labelledby="hero-title">
@@ -162,13 +121,13 @@ const alternates = locales.map((item) => ({
         <div class="mt-10 flex w-full flex-wrap justify-center gap-4">
           <a
             class="inline-flex min-h-14 w-full items-center justify-center rounded-2xl bg-accent px-7 py-4 font-bold text-primary shadow-[0_14px_30px_rgba(254,189,17,0.28)] transition duration-200 hover:-translate-y-px sm:w-auto"
-            href="#services"
+            href={getPagePath(locale, "services")}
           >
             {t.common.joinMission}
           </a>
           <a
             class="inline-flex min-h-14 w-full items-center justify-center rounded-2xl border-2 border-secondary/80 bg-white/85 px-7 py-4 font-bold text-secondary transition duration-200 hover:-translate-y-px sm:w-auto"
-            href="#about"
+            href={getPagePath(locale, "about")}
           >
             {t.common.learnMore}
           </a>
@@ -199,6 +158,77 @@ const alternates = locales.map((item) => ({
       </div>
     </section>
 
+    <section class="mx-auto w-[min(1200px,calc(100vw-2rem))] py-14 md:py-20">
+      <div class="grid gap-8 overflow-hidden rounded-[2.4rem] border border-[#d4c5ac]/55 bg-[linear-gradient(180deg,#fff7e8_0%,#fff1d2_100%)] p-6 shadow-soft md:grid-cols-[0.95fr_1.2fr] md:p-10">
+        <div class="flex flex-col justify-center">
+          <p class="m-0 text-[0.88rem] font-bold uppercase tracking-[0.34em] text-primary">
+            {t.sections.sacredInitiatives}
+          </p>
+          <h2 class="mt-4 font-serif text-[clamp(2.3rem,4.5vw,4.1rem)] font-semibold leading-[1.08]">
+            {t.sections.artOfStillness}
+          </h2>
+          <p class="mt-6 max-w-[34rem] text-[1.05rem] leading-[1.95] text-muted md:text-[1.12rem]">
+            {t.sections.artOfStillnessDescription}
+          </p>
+          <a
+            class="mt-6 inline-flex min-h-11 w-fit items-center justify-center rounded-xl border border-primary/20 bg-white/75 px-5 py-2.5 text-sm font-bold text-primary transition duration-200 hover:-translate-y-px hover:bg-white"
+            href={`${getPagePath(locale, "about")}#mission`}
+          >
+            {t.common.readMore}
+          </a>
+        </div>
+
+        <div class="relative" data-stillness-carousel>
+          <div class="overflow-hidden rounded-[2rem]">
+            <div class="flex transition-transform duration-500 ease-out" data-stillness-track>
+              {stillnessSlides.map((slide) => (
+                <div class="min-w-full">
+                  <img
+                    class="h-[22rem] w-full object-cover md:h-[30rem]"
+                    src={slide.image}
+                    alt={slide.alt}
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            data-stillness-prev
+            aria-label={t.stillnessCarousel.previous}
+            class="absolute left-4 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/88 text-primary shadow-lg backdrop-blur-sm transition hover:bg-primary hover:text-white"
+          >
+            &#8592;
+          </button>
+
+          <button
+            type="button"
+            data-stillness-next
+            aria-label={t.stillnessCarousel.next}
+            class="absolute right-4 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/88 text-primary shadow-lg backdrop-blur-sm transition hover:bg-primary hover:text-white"
+          >
+            &#8594;
+          </button>
+
+          <div class="mt-5 flex justify-center gap-2" data-stillness-dots>
+            {stillnessSlides.map((_, index) => (
+              <button
+                type="button"
+                data-stillness-dot={index}
+                aria-label={`Go to slide ${index + 1}`}
+                class:list={[
+                  "h-2.5 rounded-full transition-all duration-300",
+                  index === 0 ? "w-8 bg-primary" : "w-2.5 bg-primary/25 hover:bg-primary/45"
+                ]}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="services" class="mx-auto w-[min(1200px,calc(100vw-2rem))] py-14 md:py-20">
       <div class="mb-12 text-center">
         <p class="m-0 text-[0.88rem] font-bold uppercase tracking-[0.34em] text-primary">{t.sections.sacredInitiatives}</p>
@@ -224,7 +254,7 @@ const alternates = locales.map((item) => ({
           <div class="mt-6 flex justify-end">
             <a
               class="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/30 bg-white/15 px-5 py-2.5 text-sm font-bold text-white backdrop-blur-sm transition duration-200 hover:-translate-y-px hover:bg-white hover:text-primary"
-              href="#about"
+              href={`${getPagePath(locale, "services")}#homeless`}
             >
               {t.common.more}
             </a>
@@ -250,7 +280,13 @@ const alternates = locales.map((item) => ({
             <img class="mt-auto h-72 w-full rounded-[1.25rem] object-cover" src={card.image} alt={card.alt} loading="lazy" />
             <a
               class="mt-6 ml-auto inline-flex min-h-11 w-fit items-center justify-center rounded-xl border border-primary/20 bg-white/70 px-5 py-2.5 text-sm font-bold text-primary transition duration-200 hover:-translate-y-px hover:bg-white"
-              href="#about"
+              href={
+                card.title === t.cards.yogaTitle
+                  ? `${getPagePath(locale, "services")}#wellness`
+                  : card.title === t.cards.gaushalaTitle
+                    ? `${getPagePath(locale, "services")}#gaushala`
+                    : `${getPagePath(locale, "services")}#education`
+              }
             >
               {t.common.more}
             </a>
@@ -336,52 +372,72 @@ const alternates = locales.map((item) => ({
     </section>
   </main>
 
-  <footer id="contact" class="border-t border-stone-400/20 bg-white/80 pt-16">
-    <div class="mx-auto grid w-[min(1200px,calc(100vw-2rem))] gap-10 md:grid-cols-[1.4fr_0.8fr_0.9fr]">
-      <div>
-        <a
-          class="mb-4 inline-flex items-center gap-4 font-serif text-[clamp(1.1rem,1rem+0.8vw,2rem)] font-bold text-brand"
-          href={localePath[locale]}
-        >
-          <img
-            class="h-14 w-14 rounded-full object-cover shadow-[0_8px_20px_rgba(0,0,0,0.08)] sm:h-[4.25rem] sm:w-[4.25rem]"
-            src="/images/logo.png"
-            alt={`${t.brand} logo`}
-            loading="lazy"
-          />
-          <span>{t.brand}</span>
-        </a>
-        <p class="max-w-[30rem] leading-[1.9] text-muted">
-          {t.footer.about}
-        </p>
-      </div>
-
-      <div>
-        <h3 class="mb-4 font-serif text-[1.3rem] font-semibold">{t.footer.quickLinks}</h3>
-        <ul class="grid gap-4 text-muted">
-          <li><a class="transition hover:text-primary focus-visible:text-primary" href="#about">{t.footer.aboutUs}</a></li>
-          <li><a class="transition hover:text-primary focus-visible:text-primary" href="#services">{t.footer.ourProjects}</a></li>
-          <li><a class="transition hover:text-primary focus-visible:text-primary" href="mailto:info@keshavdhamseva.org?subject=Annual%20Reports">{t.footer.annualReports}</a></li>
-          <li><a class="transition hover:text-primary focus-visible:text-primary" href="mailto:info@keshavdhamseva.org?subject=Volunteer%20with%20Keshavdham%20Seva">{t.footer.volunteer}</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h3 class="mb-4 font-serif text-[1.3rem] font-semibold">{t.footer.contactUs}</h3>
-        <ul class="grid gap-4 text-muted">
-          <li><a class="transition hover:text-primary focus-visible:text-primary" href="mailto:info@keshavdhamseva.org">info@keshavdhamseva.org</a></li>
-          <li><a class="transition hover:text-primary focus-visible:text-primary" href="tel:+919876543210">+91 98765 43210</a></li>
-          <li><span>Vrindavan, Uttar Pradesh, India</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="mx-auto mt-10 w-[min(1200px,calc(100vw-2rem))] border-t border-stone-400/15 py-10 text-center text-sm text-muted/90">
-      <p>{t.footer.copyright}</p>
-    </div>
-  </footer>
+  <SiteFooter locale={locale} />
 </BaseLayout>
 
 <script>
+  const stillnessRoot = document.querySelector("[data-stillness-carousel]");
+
+  if (stillnessRoot) {
+    const track = stillnessRoot.querySelector("[data-stillness-track]");
+    const prevButton = stillnessRoot.querySelector("[data-stillness-prev]");
+    const nextButton = stillnessRoot.querySelector("[data-stillness-next]");
+    const dots = Array.from(stillnessRoot.querySelectorAll("[data-stillness-dot]"));
+    let currentIndex = 0;
+    let autoplayId;
+
+    const updateStillness = () => {
+      if (!track) return;
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+      dots.forEach((dot, index) => {
+        dot.className =
+          index === currentIndex
+            ? "h-2.5 w-8 rounded-full bg-primary transition-all duration-300"
+            : "h-2.5 w-2.5 rounded-full bg-primary/25 transition-all duration-300 hover:bg-primary/45";
+      });
+    };
+
+    const goToNextStillness = () => {
+      currentIndex = (currentIndex + 1) % dots.length;
+      updateStillness();
+    };
+
+    const startAutoplay = () => {
+      if (dots.length <= 1) return;
+      clearInterval(autoplayId);
+      autoplayId = window.setInterval(goToNextStillness, 3000);
+    };
+
+    const stopAutoplay = () => {
+      clearInterval(autoplayId);
+    };
+
+    prevButton?.addEventListener("click", () => {
+      currentIndex = (currentIndex - 1 + dots.length) % dots.length;
+      updateStillness();
+      startAutoplay();
+    });
+
+    nextButton?.addEventListener("click", () => {
+      goToNextStillness();
+      startAutoplay();
+    });
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => {
+        currentIndex = index;
+        updateStillness();
+        startAutoplay();
+      });
+    });
+
+    stillnessRoot.addEventListener("mouseenter", stopAutoplay);
+    stillnessRoot.addEventListener("mouseleave", startAutoplay);
+
+    updateStillness();
+    startAutoplay();
+  }
+
   const sliderRoot = document.querySelector("[data-testimonial-slider]");
 
   if (sliderRoot) {

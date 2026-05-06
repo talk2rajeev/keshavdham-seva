@@ -1,0 +1,83 @@
+---
+import {
+  getPagePath,
+  getTranslations,
+  localeLabels,
+  locales,
+  type Locale,
+  type PageKey
+} from "../i18n/translations";
+
+interface Props {
+  locale: Locale;
+  currentPage: PageKey;
+}
+
+const { locale, currentPage } = Astro.props;
+const t = getTranslations(locale);
+
+const navItems = [
+  { key: "home", label: t.nav.home, href: getPagePath(locale, "home") },
+  { key: "about", label: t.nav.about, href: getPagePath(locale, "about") },
+  { key: "services", label: t.nav.services, href: getPagePath(locale, "services") },
+  { key: "contact", label: t.nav.contact, href: getPagePath(locale, "contact") }
+] as const;
+---
+
+<header class="sticky top-0 z-50 border-b border-stone-400/20 bg-[#fdfcf9]/95 backdrop-blur-xl">
+  <div class="mx-auto flex min-h-[5.5rem] w-[min(1200px,calc(100vw-2rem))] items-center justify-between gap-4">
+    <a
+      class="inline-flex items-center gap-4 font-serif text-[clamp(1.1rem,1rem+0.8vw,2rem)] font-bold text-brand"
+      href={getPagePath(locale, "home")}
+      aria-label={`${t.brand} home`}
+    >
+      <img
+        class="h-14 w-14 rounded-full object-cover shadow-[0_8px_20px_rgba(0,0,0,0.08)] sm:h-[4.25rem] sm:w-[4.25rem]"
+        src="/images/logo.png"
+        alt={`${t.brand} logo`}
+        loading="eager"
+      />
+      <span>{t.brand}</span>
+    </a>
+
+    <nav class="hidden items-center gap-8 text-muted md:flex lg:gap-11" aria-label="Primary">
+      {navItems.map((item) => (
+        <a
+          class:list={[
+            "border-b-2 pb-1 font-medium transition-colors duration-200 focus-visible:border-accent focus-visible:text-ink",
+            item.key === currentPage
+              ? "border-accent text-ink"
+              : "border-transparent hover:border-accent hover:text-ink"
+          ]}
+          href={item.href}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div class="inline-flex items-center rounded-2xl border border-stone-300/70 bg-white/80 p-1">
+        {locales.map((item) => (
+          <a
+            href={getPagePath(item, currentPage)}
+            hreflang={item}
+            aria-label={`${t.common.language}: ${localeLabels[item]}`}
+            class:list={[
+              "rounded-xl px-2.5 py-2 text-xs font-semibold transition sm:px-3 sm:text-sm",
+              item === locale ? "bg-primary text-white shadow-sm" : "text-muted hover:text-primary"
+            ]}
+          >
+            {item === "en" ? "EN" : "हि"}
+          </a>
+        ))}
+      </div>
+      <a
+        class="inline-flex min-h-11 items-center justify-center rounded-2xl bg-accent px-4 py-2.5 text-sm font-bold text-primary shadow-[0_14px_30px_rgba(254,189,17,0.28)] transition duration-200 hover:-translate-y-px sm:min-h-14 sm:px-6 sm:py-3 sm:text-base"
+        href="mailto:info@keshavdhamseva.org?subject=I%20want%20to%20donate"
+      >
+        {t.common.donate}
+      </a>
+    </div>
+  </div>
+</header>

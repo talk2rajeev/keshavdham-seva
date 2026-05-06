@@ -1,0 +1,45 @@
+---
+import SiteFooter from "../../components/SiteFooter.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPagePath, getTranslations, locales } from "../../i18n/translations";
+
+const locale = "en";
+const t = getTranslations(locale);
+const siteUrl = "https://keshavdhamseva.netlify.app";
+const canonical = `${siteUrl}${getPagePath(locale, "contact")}`;
+const alternates = locales.map((item) => ({
+  hreflang: item,
+  href: `${siteUrl}${getPagePath(item, "contact")}`
+}));
+---
+
+<BaseLayout title={`${t.nav.contact} | ${t.brand}`} description={t.siteDescription} lang={locale} canonical={canonical} alternates={alternates}>
+  <SiteHeader locale={locale} currentPage="contact" />
+  <main class="mx-auto w-[min(1200px,calc(100vw-2rem))] py-14 md:py-20">
+    <section class="rounded-[2.4rem] bg-[linear-gradient(180deg,#fff7e8_0%,#fff4e2_100%)] p-8 text-center md:p-12">
+      <h1 class="font-serif text-[clamp(2.6rem,5vw,4.8rem)] font-semibold leading-[1.08]">
+        {t.contactPage.title}
+      </h1>
+      <p class="mx-auto mt-6 max-w-4xl text-[1.08rem] leading-[1.9] text-muted md:text-[1.15rem]">
+        {t.contactPage.intro}
+      </p>
+
+      <div class="mx-auto mt-10 grid max-w-4xl gap-6 md:grid-cols-3">
+        <article class="rounded-[1.8rem] bg-white/75 p-6">
+          <h2 class="font-serif text-[1.7rem] font-semibold text-primary">{t.footer.contactUs}</h2>
+          <p class="mt-4 text-muted"><a href="mailto:info@keshavdhamseva.org">info@keshavdhamseva.org</a></p>
+        </article>
+        <article class="rounded-[1.8rem] bg-white/75 p-6">
+          <h2 class="font-serif text-[1.7rem] font-semibold text-primary">Phone</h2>
+          <p class="mt-4 text-muted"><a href="tel:+919876543210">+91 98765 43210</a></p>
+        </article>
+        <article class="rounded-[1.8rem] bg-white/75 p-6">
+          <h2 class="font-serif text-[1.7rem] font-semibold text-primary">Address</h2>
+          <p class="mt-4 text-muted">Vrindavan, Uttar Pradesh, India</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <SiteFooter locale={locale} />
+</BaseLayout>

@@ -1,0 +1,54 @@
+---
+import SiteFooter from "../../components/SiteFooter.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPagePath, getTranslations, locales } from "../../i18n/translations";
+
+const locale = "en";
+const t = getTranslations(locale);
+const siteUrl = "https://keshavdhamseva.netlify.app";
+const canonical = `${siteUrl}${getPagePath(locale, "services")}`;
+const alternates = locales.map((item) => ({
+  hreflang: item,
+  href: `${siteUrl}${getPagePath(item, "services")}`
+}));
+
+const items = [
+  { id: "wellness", title: t.servicesPage.items.wellnessTitle, body: t.servicesPage.items.wellnessBody, image: "/images/yoga-stillness.png" },
+  { id: "homeless", title: t.servicesPage.items.homelessTitle, body: t.servicesPage.items.homelessBody, image: "/images/homeless-outreach-hall.png" },
+  { id: "education", title: t.servicesPage.items.educationTitle, body: t.servicesPage.items.educationBody, image: "/images/gurukul.png" },
+  { id: "gaushala", title: t.servicesPage.items.gaushalaTitle, body: t.servicesPage.items.gaushalaBody, image: "/images/gaushala.png" }
+];
+---
+
+<BaseLayout title={`${t.nav.services} | ${t.brand}`} description={t.siteDescription} lang={locale} canonical={canonical} alternates={alternates}>
+  <SiteHeader locale={locale} currentPage="services" />
+  <main class="mx-auto w-[min(1200px,calc(100vw-2rem))] py-14 md:py-20">
+    <section class="text-center">
+      <p class="m-0 text-[0.88rem] font-bold uppercase tracking-[0.34em] text-primary">{t.sections.sacredInitiatives}</p>
+      <h1 class="mt-4 font-serif text-[clamp(2.6rem,5vw,4.8rem)] font-semibold leading-[1.08]">
+        {t.servicesPage.title}
+      </h1>
+      <p class="mx-auto mt-6 max-w-4xl text-[1.08rem] leading-[1.9] text-muted md:text-[1.15rem]">
+        {t.servicesPage.intro}
+      </p>
+    </section>
+
+    <section class="mt-12 grid gap-8">
+      {items.map((item) => (
+        <article id={item.id} class="grid gap-6 overflow-hidden rounded-[2rem] border border-[#d4c5ac]/50 bg-white/85 p-6 shadow-soft md:grid-cols-[0.9fr_1.1fr] md:p-8">
+          <img class="h-72 w-full rounded-[1.5rem] object-cover md:h-full" src={item.image} alt={item.title} loading="lazy" />
+          <div class="flex flex-col justify-center">
+            <h2 class="font-serif text-[clamp(2rem,3vw,3rem)] font-semibold leading-[1.08] text-primary">
+              {item.title}
+            </h2>
+            <p class="mt-5 text-[1.05rem] leading-[1.95] text-muted">
+              {item.body}
+            </p>
+          </div>
+        </article>
+      ))}
+    </section>
+  </main>
+  <SiteFooter locale={locale} />
+</BaseLayout>
